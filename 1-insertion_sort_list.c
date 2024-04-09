@@ -1,6 +1,13 @@
 #include "sort.h"
 #include <stdlib.h>
 
+/**
+ * _replace - Does the replacing
+ *
+ * @i: DLL pointer that iterates.
+ *
+ * @list: head.
+ */
 void _replace(listint_t *i, listint_t **list)
 {
 	listint_t *tmp;
