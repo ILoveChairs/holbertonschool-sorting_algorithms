@@ -3,88 +3,79 @@
 #include <stdio.h>
 
 /**
- * _intercambiador - Exchanger.
- *
- * @array: Array.
- * @size: Size of array.
- *
- * @pivot: Index of pivot.
- * @i: i.
+ * swap - swaps two integers in an array.
+ * @array: The array to sort.
+ * @i: The first index to swap.
+ * @j: The second index to swap.
+ * @size: The size of the array.
  */
-void _intercambiador(int *array, size_t size, size_t pivot, size_t i)
+void swap(int *array, int i, int j, size_t size)
 {
-	int tmp;
-
-	if (pivot - 1 == i)
-	{
-		tmp = array[pivot];
-		array[pivot] = array[i];
-		array[i] = tmp;
-		return;
-	}
-
-	tmp = array[pivot - 1];
-
-	array[pivot - 1] = array[pivot];
-	array[pivot] = array[i];
-	array[i] = tmp;
-
-	size += 1;
-}
-
-/**
- * _quick_sort_recursive - Recursive function.
- *
- * @array: Array.
- * @size: Size.
- *
- * @start: asdfg
- * @end: asdfg
- */
-void _quick_sort_recursive(int *array, size_t size, size_t start, size_t end)
-{
-	size_t pivot;
-	size_t i;
-
-	if (end - start < 2)
-		return;
-
-	pivot = end;
-
-	i = start;
-	while (i < pivot)
-	{
-		if (pivot == start + 1)
-		{
-			if (array[start] > array[pivot])
-				_intercambiador(array, size, pivot, i);
-			break;
-		}
-
-		if (array[i] < array[pivot])
-			i += 1;
-		else
-			_intercambiador(array, size, pivot--, i);
-	}
-
+	int temp;
+	temp = array[i];
+	array[i] = array[j];
+	array[j] = temp;
 	print_array(array, size);
-
-	_quick_sort_recursive(array, size, start, pivot - 1);
-	_quick_sort_recursive(array, size, pivot, end);
 }
 
+/**
+ * partition - orders a subset of an array of integers according to
+ * the Lomuto scheme.
+ * @array: The array to sort.
+ * @lo: The lowest index of the subset to order.
+ * @hi: The highest index of the subset to order.
+ * @size: The size of the array.
+ *
+ * Return: The final partition index.
+ */
+int partition(int *array, int lo, int hi, size_t size)
+{
+	int pivot, above, below;
+
+	pivot = array[hi];
+	for (above = lo, below = lo; below < hi; below++)
+	{
+		if (array[below] < pivot)
+		{
+			if (above < below)
+				swap(array, above, below, size);
+			above++;
+		}
+	}
+	if (array[hi] < array[above])
+		swap(array, above, hi, size);
+	return (above);
+}
 
 /**
- * quick_sort - Quick sorts array.
- *
- * @array: Array to sort.
- *
- * @size: Size of array.
+ * quick_sort_rec - sorts an array of integers in ascending
+ * order using the Quick sort algorithm
+ * @array: The array to sort.
+ * @lo: The lowest index of the array to sort.
+ * @hi: The highest index of the array to sort.
+ * @size: The size of the array.
+ */
+void quick_sort_rec(int *array, int lo, int hi, size_t size)
+{
+	int p;
+
+	if (lo < hi)
+	{
+		p = partition(array, lo, hi, size);
+		quick_sort_rec(array, lo, p - 1, size);
+		quick_sort_rec(array, p + 1, hi, size);
+	}
+}
+
+/**
+ * quick_sort - sorts an array of integers in ascending
+ * order using the Quick sort algorithm
+ * @array: The array to sort.
+ * @size: The size of the array.
  */
 void quick_sort(int *array, size_t size)
 {
-	_quick_sort_recursive(array, size, 0, size - 1);
+	if (array == NULL || size < 2)
+		return;
+	quick_sort_rec(array, 0, size - 1, size);
 }
-
-
-
